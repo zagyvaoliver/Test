@@ -1,0 +1,29 @@
+pipeline {
+           agent { label 'worker1' }
+           stages {
+                stage("Build") {
+                     steps {
+                          sh 'sudo yum install -y epel-release nodejs'
+                          sh 'sudo yum install -y nodejs'
+                     }
+                }
+                stage("Download"){
+                    steps {
+                        sh 'rm -rf /home/jenkins/worker/workspace/test1/jenkins/'
+                        sh 'git clone https://github.com/tothti/jenkins.git'
+                    }
+                }
+                stage("Copy"){
+                    steps {
+                        sh 'cp /home/jenkins/worker/workspace/test1/jenkins/index.js /tmp'
+                    }
+                }
+                stage("Add-firewall"){
+                    steps {
+                        sh 'sudo firewall-cmd --add-port=8888/tcp'
+                        sh 'curl 192.168.56.120:8888'
+                    }
+                }
+                    
+           }
+      }
